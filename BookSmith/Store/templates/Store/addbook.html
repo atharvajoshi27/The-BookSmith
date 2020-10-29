@@ -1,0 +1,136 @@
+{% extends 'Store/layout.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+Add Book
+{% endblock %}
+
+{% block body %}
+<div class="container">
+	<div class="row row-content">
+            {% if message %}
+                <div>{{ message }}</div>
+            {% endif %}
+        </div>
+
+<form action="{% url 'addbook' %}" method="POST" enctype="multipart/form-data">	
+	{% csrf_token %}
+
+	<div class="form-group">
+		<label for="book_name">Book Name</label>
+		{% render_field form.book_name class+="form-control" name="book_name" autocomplete="off" id="book_name" %}
+        {% if form.book_name.errors %}
+            {% for error in form.book_name.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        {% endif %}
+		<!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"> -->
+	</div>
+	<div class="form-group">
+		<label for="book_author">Author</label>
+		{% render_field form.book_author class+="form-control" name="book_author" autocomplete="off" id="book_author" %}
+        {% if form.book_author.errors %}
+            {% for error in form.book_author.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        {% endif %}
+		<!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"> -->
+	</div>
+	<div class="form-group">
+		<label for="book_price">Price</label>
+		{% render_field form.book_price class+="form-control" name="book_price" autocomplete="off" id="book_price" %}
+        {% if form.book_price.errors %}
+            {% for error in form.book_price.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        {% endif %}
+		<!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"> -->
+	</div>
+	<div class="form-group">
+		<label for="book_edition">Edition</label>
+		{% render_field form.book_edition class+="form-control" name="book_edition" autocomplete="off" id="book_edition" %}
+        {% if form.book_edition.errors %}
+            {% for error in form.book_edition.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        {% endif %}
+		<!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"> -->
+	</div>
+	<div class="form-group">
+		<label for="book_quantity">Quantity</label>
+		{% render_field form.book_quantity class+="form-control" name="book_quantity" autocomplete="off" id="book_quantity" %}
+        {% if form.book_quantity.errors %}
+            {% for error in form.book_quantity.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        {% endif %}
+		<!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"> -->
+	</div>
+	<div class="form-group">
+		<label for="category">Category</label>
+		<select class="form-control" id="category" name="category">
+			<option>Action and Adventure</option>
+			<option>Anthology</option>
+			<option>Biography/Autobiography</option>
+			<option>Biology</option>
+			<option>Chemistry</option>
+			<option>Classic</option>
+			<option>Comic and Graphic Novel</option>
+			<option>Crime and Detective</option>
+			<option>Drama</option>
+			<option>Engineering</option>
+			<option>Essay</option>
+			<option>Fable</option>
+			<option>Fairy Tale</option>
+			<option>Fan-Fiction</option>
+			<option>Fantasy</option>
+			<option>Historical Fiction</option>
+			<option>Horror</option>
+			<option>Humor</option>
+			<option>Legend</option>
+			<option>Magical Realism</option>
+			<option>Mathematics</option>
+			<option>Memoir</option>
+			<option>Mystery</option>
+			<option>Mythology</option>
+			<option>Narrative Nonfiction</option>
+			<option>Periodicals</option>
+			<option>Physics</option>
+			<option>Poetry</option>
+			<option>Realistic Fiction</option>
+			<option>Reference Books</option>
+			<option>Romance</option>
+			<option>Satire</option>
+			<option>Science Fiction (Sci-Fi)</option>
+			<option>Self-help Book</option>
+			<option>Short Story</option>
+			<option>Speech</option>
+			<option>Suspense/Thriller</option>
+			<option>Textbook</option>
+		</select>
+	</div>
+	
+	<div class="form-group">
+		<label for="is_new">New?</label>
+		{% render_field form.is_new class+="form-control" name="is_new" autocomplete="off" id="is_new" %}
+        {% if form.is_new.errors %}
+            {% for error in form.is_new.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        {% endif %}
+		<!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"> -->
+	</div>
+	<div class="form-group">
+		<label for="image_file">Upload Image</label>
+		{% render_field form.image_file class+="form-control-file" name="image_file" autocomplete="off" id="image_file" %}
+		{% if form.image_file.errors %}
+			{% for error in form.image_file.errors %}
+				<li>{{ error }}</li>
+			{% endfor %}
+		{% endif %}
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">Add Book</button>
+</form>	
+</div>
+
+{% endblock %}
