@@ -32,6 +32,7 @@ def register(request):
 			instance = User.objects.create_user(**form.cleaned_data)
 			
 			print(instance.__dict__)
+
 			# Linking to vendor or customer model
 			is_vendor = instance.is_vendor
 			if is_vendor:
@@ -103,9 +104,24 @@ def index_customer(request):
 	user = request.user
 	if user.is_vendor:
 		return HttpResponseRedirect(reverse('index-vendor'))
-	books = Book.objects.all()
+
+	cats = {}
+
+	categories = Category.objects.all()
+	
+	for category in categories:
+		print(category.book_set)
+		# If book set is not empty
+		books = Book.objects.filter(category=category).order_by("-date")[:9]
+		if bool(books):
+			cats[category.category] = books
+			print(cats[category.category])
+
+	# books = Book.objects.filter(category=).order_by("-date").all()
+
+	# print(f"Type of books : {type(books)}")
 	context = {
-		"books" : books,
+		"categories" : cats,
 	}
 	return render(request, 'Store/index_customer.html', context)
 
@@ -124,6 +140,9 @@ def index_vendor(request):
 
 @login_required
 def addbook(request):
+	user = request.user
+	if not user.is_vendor:
+		return HttpResponseRedirect(reverse('index-customer'))
 	if request.method == "POST":
 		print("Request : ", request.POST)
 		form = AddBook(request.POST, request.FILES)
@@ -176,3 +195,89 @@ def addbook(request):
 		"form" : form,
 		}
 		return render(request, 'Store/addbook.html', context)
+
+@login_required
+def cart_item(request, book_id):
+	print(f"Book Id: {book_id} : {type(book_id)}")
+	try:
+		book_id = int(book_id)
+		book = Book.objects.filter(pk=book_id).first()
+		user = request.user
+		cart = user.cart_set.first()
+		print("Step 1")
+		if not cart is None:
+			print("Step 1.1")
+			yes = False
+			for cart_item in cart.cartitem_set.all():
+				print("Step 1.2")
+				print(f"b_id = {cart_item.book_id.book_id}")
+				if cart_item.book_id.book_id == book_id:
+					print("Step 1.3")
+					cart_item.book_quantity = cart_item.book_quantity + 1
+					cart_item.save()
+					yes = True
+					break
+			if not yes:
+				print("Step 1.4")
+				cart_item = CartItem(book_quantity=1, book_id=book, cart=cart)
+				cart_item.save()
+			print("Step 2")
+		else:
+			print("Step 2.1")
+			cart_item = CartItem(book_quantity=1, book_id=book)
+			# cart_item.save(commit=False)
+			print("Step 2.2")
+		print("Step 3")
+		if cart is None:
+			cart = Cart(customer_id=user)
+			cart.save()
+			cart_item.cart = cart
+			cart_item.save()
+
+		print("Step 4")
+
+		if user.is_vendor:
+			return HttpResponseRedirect(reverse('cart-vendor'))
+		else:
+			return HttpResponseRedirect(reverse('cart-customer'))
+		print("Step 5")
+	except Exception as e:
+		print(f"Exception {e} occurred in cart_item.")
+		context = {
+			"message" : "Requested item is currently out of stock."
+		}
+		raise Http404('Something Went Wrong.')
+
+@login_required
+def cart_view(request):
+	user = request.user
+	
+	context = {
+		"cart_exists" : True,
+	}
+
+	cart = user.cart_set.first()
+	
+	# Cart for the user has been created
+	if not cart is None:
+		cart_items = cart.cartitem_set.all()
+
+		# If hasn't added any cartitem
+		if not bool(cart_items):
+			context["cart_exists"] = False
+
+		# If cart is populated
+		else:
+			context["cart_exists"] = True
+			context["cart_items"] = cart_items
+	
+	# Never added any cartitem
+	else:
+		context["cart_exists"] = False
+	
+	return render(request, 'Store/cart.html', context)
+	
+
+@login_required
+def payment(request):
+	pass

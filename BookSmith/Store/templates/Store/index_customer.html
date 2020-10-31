@@ -16,7 +16,7 @@
         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" href="{% url 'cart-customer' %}">Cart</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -40,32 +40,36 @@
   </div>
 </nav>
 
-<div class="container">
-  <h3 class="h3 mt-3 mb-3">Available Books</h3>
-  {% for book in books %}
-    {% if forloop.first %}<div class="row">{% endif %}
-      <div class="col-md-3 col-sm-6">
-        <div class="product-grid2">
-          <div class="product-image2">
-            <a href="#">
-              <img class="pic-1" src="{{ book.image_file.url }}">
-              <img class="pic-2" src="{{ book.image_file.url }}">
-            </a>
-            <ul class="social">
-              <li><a href="#" data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
-              <li><a href="#" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
-              <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
-            </ul>
-            <a class="add-to-cart" href="">Add to cart</a>
-          </div>
-          <div class="product-content">
-            <h3 class="title"><a href="#">{{ book.book_name }}</a></h3>
-            <span class="price">Rs.{{ book.book_price }}</span>
-          </div>
-        </div>
-      </div>
-    {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
-    {% if forloop.last %}</div>{% endif %}
+<div class="container">	
+	{% for category, books in categories.items %}
+	  <h3 class="h3 mt-3 mb-3">{{ category }}</h3>
+	  {% for book in books %}
+	    {% if forloop.first %}<div class="row">{% endif %}
+	      <div class="col-md-3 col-sm-6">
+	        <div class="product-grid2">
+	          <div class="product-image2">
+	            <a href="#">
+	              <img class="pic-1" src="{{ book.image_file.url }}">
+	              <img class="pic-2" src="{{ book.image_file.url }}">
+	            </a>
+	            <ul class="social">
+	              <li><a href="#" data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
+	              <li><a href="#" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
+	              <li><a href="{% url 'cart-item' book.book_id %}" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
+	            </ul>
+	            <!-- <form action="{% url 'cart-item' book.book_id %}"> -->
+	            	<a class="add-to-cart" type="submit" href="{% url 'cart-item' book.book_id %}">Add to cart</a>	            	
+	            <!-- </form> -->
+	          </div>
+	          <div class="product-content">
+	            <h3 class="title"><a href="#">{{ book.book_name }}</a></h3>
+	            <span class="price">Rs.{{ book.book_price }}</span>
+	          </div>
+	        </div>
+	      </div>
+	    {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+		{% if forloop.last %}</div>{% endif %}
+	{% endfor %}
 {% endfor %}
 </div>
 {% endblock %}

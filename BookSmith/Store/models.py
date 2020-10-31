@@ -58,6 +58,7 @@ class Book(models.Model):
 	book_edition = models.DecimalField(max_digits=6, decimal_places=2)
 	book_price = models.DecimalField(max_digits=6, decimal_places=2)
 	book_quantity = models.IntegerField()
+	date = models.DateTimeField(auto_now=True)
 	is_new = models.BooleanField(choices=old_new)
 	image_file = models.ImageField(upload_to=UPLOAD_TO)
 	category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -84,17 +85,18 @@ class Book(models.Model):
 		quality_val = 100
 		im.save(filename, quality=quality_val)
 		
+class Cart(models.Model):
+	cart_id = models.AutoField(primary_key=True)
+	customer_id = models.ForeignKey(User, on_delete=models.CASCADE)
+
 
 class CartItem(models.Model):
 	cartitem_id = models.AutoField(primary_key=True)
 	# total_price = models.DecimalField(max_digits=6, decimal_place=2)
-	book_quantity = models.IntegerField()
+	book_quantity = models.IntegerField(default=0)
 	book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
+	cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
 
-
-class Cart(models.Model):
-	cart_id = models.AutoField(primary_key=True)
-	customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
 
 class Payment(models.Model):

@@ -21,6 +21,9 @@ Store
       <li class="nav-item">
         <a class="nav-link" href="{% url 'addbook' %}">Add Book</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'cart-vendor' %}">Cart</a>
+      </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Dropdown
@@ -57,9 +60,9 @@ Store
             <ul class="social">
               <li><a href="#" data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
               <li><a href="#" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
-              <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
+              <li><a href="{% url 'cart-item' book.book_id %}" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
             </ul>
-            <a class="add-to-cart" href="">Add to cart</a>
+            <a class="add-to-cart" href="{% url 'cart-item' book.book_id %}"">Add to cart</a>
           </div>
           <div class="product-content">
             <h3 class="title"><a href="#">{{ book.book_name }}</a></h3>
