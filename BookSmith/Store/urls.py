@@ -19,5 +19,7 @@ urlpatterns = [
 	path('customer/cart/remove/<int:cart_item>', views.cart_remove, name='cart-remove-customer'),
 	path('vendor/cart/update', views.cart_update, name='cart-update-vendor'),
 	path('customer/cart/update', views.cart_update, name='cart-update-customer'),
-]
+	path('categories/<str:category>', views.category_details, name='category-details'),
+	path('payment', views.payment, name='payment'),
 
+]

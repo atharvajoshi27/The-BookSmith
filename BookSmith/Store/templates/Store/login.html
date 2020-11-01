@@ -9,6 +9,13 @@
             {% if message %}
                 <div>{{ message }}</div>
             {% endif %}
+            {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} mt-3">
+      <p class="icontext"><i class="icon text-{{ message.tags }}"></i>{{ message }}</p>
+    </div>
+  {% endfor %}
+{% endif %}
         </div>
           <form action="{% url 'login' %}" method="POST" class="form-group" >
                 {% csrf_token %}

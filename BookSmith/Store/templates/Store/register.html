@@ -7,6 +7,13 @@ Refer this link and upgrade UI : https://getbootstrap.com/docs/4.0/components/fo
 
 {% block body %}
     <div class="container">
+        {% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} mt-3">
+      <p class="icontext"><i class="icon text-{{ message.tags }}"></i>{{ message }}</p>
+    </div>
+  {% endfor %}
+{% endif %}
         <div class="row row-content">
             <h2>Register</h2>
         </div>

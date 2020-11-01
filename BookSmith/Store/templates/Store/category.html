@@ -1,12 +1,8 @@
 {% extends 'Store/layout.html' %}
 
-{% block title %}
-Store
-{% endblock %}
+{% block title %} {% endblock %}
 
 {% block body %}
-<!-- reference : https://bootsnipp.com/snippets/O5yMd -->
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">Navbar</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,12 +14,11 @@ Store
       <li class="nav-item active">
         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
       </li>
+      {% if user.is_authenticated %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'addbook' %}">Add Book</a>
+        <a class="nav-link" href="{% if user.is_vendor %}{% url 'cart-vendor' %}{% else %}{% url 'cart-customer' %}{% endif %}">Cart</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'cart-vendor' %}">Cart</a>
-      </li>
+      {% endif %}
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Dropdown
@@ -45,19 +40,19 @@ Store
     </form>
   </div>
 </nav>
-
-<div class="container">
-  {% if messages %}
+<section class="section-content padding-y">
+<div class="container mt-3">
+{% if messages %}
   {% for message in messages %}
     <div class="alert alert-{{ message.tags }} mt-3">
       <p class="icontext"><i class="icon text-{{ message.tags }}"></i>{{ message }}</p>
     </div>
   {% endfor %}
-  {% endif %}
-  <h3 class="h3 mt-3 mb-3">Your Books</h3>
+{% endif %}
+  <!-- <h3 class="h3 mt-3 mb-3">Your Books</h3> -->
   {% for book in books %}
     {% if forloop.first %}<div class="row">{% endif %}
-      <div class="col-md-3 col-sm-6">
+      <div class="col-md-2 col-sm-6">
         <div class="product-grid2">
           <div class="product-image2">
             <a href="#">
@@ -77,9 +72,9 @@ Store
           </div>
         </div>
       </div>
-    {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+    {% if forloop.counter|divisibleby:6 %}</div><div class="row">{% endif %}
     {% if forloop.last %}</div>{% endif %}
 {% endfor %}
 </div>
-
+</section>
 {% endblock %}

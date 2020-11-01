@@ -11,7 +11,14 @@ Add Book
             {% if message %}
                 <div>{{ message }}</div>
             {% endif %}
-        </div>
+			{% if messages %}
+				{% for message in messages %}
+					<div class="alert alert-{{ message.tags }} mt-3">
+					<p class="icontext"><i class="icon text-{{ message.tags }}"></i>{{ message }}</p>
+					</div>
+				{% endfor %}
+			{% endif %}
+    </div>
 
 <form action="{% url 'addbook' %}" method="POST" enctype="multipart/form-data">	
 	{% csrf_token %}
@@ -71,7 +78,7 @@ Add Book
 		<select class="form-control" id="category" name="category">
 			<option>Action and Adventure</option>
 			<option>Anthology</option>
-			<option>Biography/Autobiography</option>
+			<option>Biography-Autobiography</option>
 			<option>Biology</option>
 			<option>Chemistry</option>
 			<option>Classic</option>
@@ -105,7 +112,7 @@ Add Book
 			<option>Self-help Book</option>
 			<option>Short Story</option>
 			<option>Speech</option>
-			<option>Suspense/Thriller</option>
+			<option>Suspense-Thriller</option>
 			<option>Textbook</option>
 		</select>
 	</div>

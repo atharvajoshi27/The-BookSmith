@@ -103,29 +103,49 @@ def log_out(request):
 
 @login_required
 def index_customer(request):
+	# user = request.user
+	# if user.is_vendor:
+	# 	return HttpResponseRedirect(reverse('index-vendor'))
+
+	# cats = {}
+
+	# categories = Category.objects.all()
+	
+	# for category in categories:
+	# 	print(category.book_set)
+	# 	# If book set is not empty
+	# 	books = Book.objects.filter(category=category).order_by("-date")[:9]
+	# 	if bool(books):
+	# 		cats[category.category] = books
+	# 		print(cats[category.category])
+
+	# # books = Book.objects.filter(category=).order_by("-date").all()
+
+	# # print(f"Type of books : {type(books)}")
+	# context = {
+	# 	"categories" : cats,
+	# }
+	# return render(request, 'Store/index_customer.html', context)
+
 	user = request.user
 	if user.is_vendor:
 		return HttpResponseRedirect(reverse('index-vendor'))
 
-	cats = {}
+	cats = []
 
 	categories = Category.objects.all()
-	
-	for category in categories:
-		print(category.book_set)
-		# If book set is not empty
-		books = Book.objects.filter(category=category).order_by("-date")[:9]
-		if bool(books):
-			cats[category.category] = books
-			print(cats[category.category])
 
+	for category in categories:
+		if category.book_set.all().exists():
+			cats.append(category)
+	
 	# books = Book.objects.filter(category=).order_by("-date").all()
 
 	# print(f"Type of books : {type(books)}")
 	context = {
 		"categories" : cats,
 	}
-	return render(request, 'Store/index_customer.html', context)
+	return render(request, 'Store/categories.html', context)
 
 @login_required
 def index_vendor(request):
@@ -325,21 +345,25 @@ def cart_update(request):
 		# for cartitem_id in cartitem_ids:
 		# 	cartitem = 
 		cart = request.user.cart_set.first()
-		cartitems = cart.cartitem_set.all()
+		
 		p = 0
 		# print(f"CARTITEMS has length : {len(cartitems)} ", cartitems)
 		# print(f"QUANTITY has length : {len(quantity)} ", quantity)
-		for cartitem in cartitems:
-			# print("HELLO")
-			q = int(quantity[p])
-			if q > 0:
-				cartitem.book_quantity = q
-				cartitem.save()
-			else:
-				cartitem.delete()
-			p += 1
+		try :
+			cartitems = cart.cartitem_set.all()
+			for cartitem in cartitems:
+				# print("HELLO")
+				q = int(quantity[p])
+				if q > 0:
+					cartitem.book_quantity = q
+					cartitem.save()
+				else:
+					cartitem.delete()
+				p += 1
 
-	messages.success(request, "Cart Updated")
+			messages.success(request, "Cart Updated")
+		except Exception as e:
+			messages.warning(request, "Cart Cannot Be Updated")
 	
 	if user.is_vendor:
 		next = reverse('cart-vendor')
@@ -349,7 +373,94 @@ def cart_update(request):
 	return HttpResponseRedirect(next)
 
 
+@login_required
+def category_details(request, category):
+	category = Category.objects.filter(category=category).first()
+	if not category is None:
+		books = category.book_set.all()
+		context = {
+			"category" : category.category,
+			"books" : books,
+		}
+		return render(request, 'Store/category.html', context)
+
+	else:
+		raise Http404(request, "No Such Category")
+	pass
 
 @login_required
 def payment(request):
-	pass
+
+	# payment_choices = (
+	# 	('CC', 'Credit Card'),
+	# 	('DC', 'Debit Card'),
+	# 	('NB', 'Net Banking'),
+	# 	('GP', 'Google Pay'),
+	# )
+	# payment_id = models.AutoField(primary_key=True)
+	# payment_type = models.CharField(max_length=4, choices=payment_choices)
+	# amount = models.DecimalField(max_digits=6, decimal_places=2)
+	# payment_date = models.DateTimeField(auto_now_add=True)
+	# cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+	# customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE)
+	user = request.user
+
+	if request.method == "POST":
+		print("Payment Received")
+		paymentmethod = request.POST["paymentMethod"]
+		pay = Payment()
+		if paymentmethod == "Credit Card":
+			pay.payment_type = "CC"
+			# pay = Payment(payment_type="CC")
+		elif paymentmethod == "Debit Card":
+			pay.payment_type = "DC"
+			# pay = Payment(payment_type="CC")
+		elif paymentmethod == "Net Banking":
+			pay.payment_type = "NB"
+			# pay = Payment(payment_type="NB")
+		else :
+			pay.payment_type = "GP"
+			# pay = Payment(payment_type="GP")
+
+		pay.amount = request.POST["grand_total"]
+		pay.customer_id = user
+
+		cart = user.cart_set.first()
+		cart.delete()
+		pay.save()
+		messages.success(request, "Payment Done For Your Cart. You Will Be Delivered Soon. Thanks.")
+		# pay.cart = 
+		if user.is_vendor:
+			return HttpResponseRedirect(reverse('index-vendor'))
+		else:
+			return HttpResponseRedirect(reverse('index-customer'))
+		# return HttpResponseRedirect()
+		pass
+	else:
+		cart = user.cart_set.first()
+		cartitems = cart.cartitem_set.all()
+		details = []
+		grand_total = 0
+		for cartitem in cartitems:
+			l = []
+			book_name = cartitem.book_id.book_name
+			if cartitem.book_quantity > cartitem.book_id.book_quantity:
+				messages.warning(request, f'{cartitem.book_id.book_name} Is Unavailable')
+				if user.is_vendor:
+					return HttpResponseRedirect(reverse('cart-vendor'))
+				else:
+					return HttpResponseRedirect(reverse('cart-customer'))
+				# return HttpResponseRedirect(reverse('cart'))
+			price = cartitem.book_quantity * cartitem.book_id.book_price
+			l.append(book_name)
+			l.append(price)
+			l.append(cartitem.book_id.book_author)
+			grand_total += price
+			details.append(l)
+	
+		context = {
+			"details" : details,
+			"grand_total" : grand_total,
+		}
+
+		return render(request, 'Store/payment.html', context)
