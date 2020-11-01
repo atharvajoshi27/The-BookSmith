@@ -67,7 +67,7 @@
             <a class="add-to-cart" href="{% url 'cart-item' book.book_id %}"">Add to cart</a>
           </div>
           <div class="product-content">
-            <h3 class="title"><a href="#">{{ book.book_name }}</a></h3>
+            <h3 class="title"><a href="{% url 'book-details' book.book_id %}">{{ book.book_name }}</a></h3>
             <span class="price">Rs.{{ book.book_price }}</span>
           </div>
         </div>

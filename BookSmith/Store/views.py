@@ -437,30 +437,51 @@ def payment(request):
 		# return HttpResponseRedirect()
 		pass
 	else:
-		cart = user.cart_set.first()
-		cartitems = cart.cartitem_set.all()
-		details = []
-		grand_total = 0
-		for cartitem in cartitems:
-			l = []
-			book_name = cartitem.book_id.book_name
-			if cartitem.book_quantity > cartitem.book_id.book_quantity:
-				messages.warning(request, f'{cartitem.book_id.book_name} Is Unavailable')
-				if user.is_vendor:
-					return HttpResponseRedirect(reverse('cart-vendor'))
-				else:
-					return HttpResponseRedirect(reverse('cart-customer'))
-				# return HttpResponseRedirect(reverse('cart'))
-			price = cartitem.book_quantity * cartitem.book_id.book_price
-			l.append(book_name)
-			l.append(price)
-			l.append(cartitem.book_id.book_author)
-			grand_total += price
-			details.append(l)
-	
-		context = {
-			"details" : details,
-			"grand_total" : grand_total,
-		}
+		try :
+			cart = user.cart_set.first()
+			cartitems = cart.cartitem_set.all()
+			details = []
+			grand_total = 0
+			items = 0
+			for cartitem in cartitems:
+				l = []
+				book_name = cartitem.book_id.book_name
+				if cartitem.book_quantity > cartitem.book_id.book_quantity:
+					messages.warning(request, f'{cartitem.book_id.book_name} Is Unavailable')
+					if user.is_vendor:
+						return HttpResponseRedirect(reverse('cart-vendor'))
+					else:
+						return HttpResponseRedirect(reverse('cart-customer'))
+					# return HttpResponseRedirect(reverse('cart'))
+				price = cartitem.book_quantity * cartitem.book_id.book_price
+				l.append(book_name)
+				l.append(price)
+				l.append(cartitem.book_id.book_author)
+				grand_total += price
+				items += 1
+				details.append(l)
+		
+			context = {
+				"details" : details,
+				"grand_total" : grand_total,
+				"items" : items,
+			}
 
-		return render(request, 'Store/payment.html', context)
+			return render(request, 'Store/payment.html', context)
+		except Exception as e:
+			messages.warning(request, "Add Something To Cart First.")
+			if user.is_vendor:
+				return HttpResponseRedirect(reverse('cart-vendor'))
+			else:
+				return HttpResponseRedirect(reverse('cart-customer'))
+
+def book_details(request, book_id):
+	book_id = int(book_id)
+	book = Book.objects.filter(pk=book_id).first()
+	if not book is None:
+		context = {
+			"book" : book,
+		}
+		return render(request, 'Store/book_details.html', context)
+	else:
+		raise Http404(request, 'Book Not Found')
