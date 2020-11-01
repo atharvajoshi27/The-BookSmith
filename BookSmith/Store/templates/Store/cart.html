@@ -1,3 +1,5 @@
+
+
 {% extends 'Store/layout.html' %}
 {% load static %}
 
@@ -40,11 +42,30 @@
   </div>
 </nav>
 
+
+
 <section class="section-content padding-y">
 <div class="container">
 
 <div class="row">
   <main class="col-md-9">
+<!--     {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" role="alert">
+      {{ message }}
+    </div> -->
+    <!-- < li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li> -->
+    <!-- {% endfor %}
+</ul>
+{% endif %} -->
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} mt-3">
+      <p class="icontext"><i class="icon text-{{ message.tags }}"></i>{{ message }}</p>
+    </div>
+  {% endfor %}
+{% endif %}
 <div class="card">
 
 <table class="table table-borderless table-shopping-cart">
@@ -79,7 +100,7 @@
     </td>
     <td class="text-right"> 
     <a data-original-title="Save to Wishlist" title="" href="" class="btn btn-light" data-toggle="tooltip"> <i class="fa fa-heart"></i></a> 
-    <a href="" class="btn btn-light"> Remove</a>
+    <a href="{% if user.is_authenticated %}{% if user.is_vendor %}{% url 'cart-remove-vendor' item.cartitem_id %}{% else %}{% url 'cart-remove-customer' item.cartitem_id %}{% endif %}{% else %}{% endif %}" class="btn btn-light"> Remove</a>
     </td>
   </tr>
   {% endfor %}
@@ -88,7 +109,7 @@
 
 <div class="card-body border-top">
   <a href="#" class="btn btn-primary float-md-right"> Make Purchase <i class="fa fa-chevron-right"></i> </a>
-  <a href="#" class="btn btn-light"> <i class="fa fa-chevron-left"></i> Continue shopping </a>
+  <a href="{% if user.is_authenticated %}{% if user.is_vendor %}{% url 'index-vendor' %}{% else %}{% url 'index-customer' %}{% endif %}{% else %}#{% endif %}" class="btn btn-light"> <i class="fa fa-chevron-left"></i> Continue shopping </a>
 </div>  
 </div> <!-- card.// -->
 

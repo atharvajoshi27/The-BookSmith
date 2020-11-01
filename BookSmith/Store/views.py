@@ -1,6 +1,8 @@
 from django.contrib.auth import authenticate, logout, login
+from django.contrib import messages
+# from django.contrib.auth import is_authenticated
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, reverse
+from django.shortcuts import render, reverse, redirect
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from .models import *
 from .forms import CreateUser, AddBook
@@ -215,13 +217,16 @@ def cart_item(request, book_id):
 					print("Step 1.3")
 					cart_item.book_quantity = cart_item.book_quantity + 1
 					cart_item.save()
+					messages.success(request, "Item Added")
 					yes = True
 					break
 			if not yes:
 				print("Step 1.4")
 				cart_item = CartItem(book_quantity=1, book_id=book, cart=cart)
 				cart_item.save()
+				messages.success(request, "Item Added")
 			print("Step 2")
+
 		else:
 			print("Step 2.1")
 			cart_item = CartItem(book_quantity=1, book_id=book)
@@ -233,6 +238,7 @@ def cart_item(request, book_id):
 			cart.save()
 			cart_item.cart = cart
 			cart_item.save()
+			messages.success(request, "Item Added")
 
 		print("Step 4")
 
@@ -275,8 +281,38 @@ def cart_view(request):
 	else:
 		context["cart_exists"] = False
 	
-	return render(request, 'Store/cart.html', context)
 	
+	return render(request, 'Store/cart.html', context)
+
+
+@login_required
+def cart_remove(request, cart_item):
+	cart_item = int(cart_item)
+	item = CartItem.objects.filter(pk=cart_item).first()
+
+	# item must exist
+	
+	if not item is None:
+		# item must belong to its creator
+		if item.cart.customer_id != request.user:
+			messages.warning(request, 'Item Cannot Be Deleted')
+			pass
+		else:
+			item.delete()
+			messages.success(request, 'Item Deleted')
+	else:
+		messages.warning(request, 'Item Cannot Be Deleted')
+
+	if request.user.is_vendor:
+		# x = reverse('cart-vendor')
+		# print(x)
+		return redirect(reverse('cart-vendor'))
+	
+	else:
+		# x = reverse('cart-customer')
+		# print(x)
+		return redirect(reverse('cart-customer'))
+
 
 @login_required
 def payment(request):
