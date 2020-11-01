@@ -263,10 +263,12 @@ def cart_view(request):
 	}
 
 	cart = user.cart_set.first()
-	
+	total = 0
 	# Cart for the user has been created
 	if not cart is None:
 		cart_items = cart.cartitem_set.all()
+		for cartitem in cart_items:
+			total += cartitem.book_quantity * cartitem.book_id.book_price
 
 		# If hasn't added any cartitem
 		if not bool(cart_items):
@@ -281,7 +283,7 @@ def cart_view(request):
 	else:
 		context["cart_exists"] = False
 	
-	
+	context["total"] = total
 	return render(request, 'Store/cart.html', context)
 
 
@@ -312,6 +314,40 @@ def cart_remove(request, cart_item):
 		# x = reverse('cart-customer')
 		# print(x)
 		return redirect(reverse('cart-customer'))
+
+@login_required
+def cart_update(request):
+	user = request.user
+	if request.method == "POST":
+		# print(request.POST)
+		# cartitem_ids = request.POST["cartitem_ids"]
+		quantity = request.POST.getlist("quantity")
+		# for cartitem_id in cartitem_ids:
+		# 	cartitem = 
+		cart = request.user.cart_set.first()
+		cartitems = cart.cartitem_set.all()
+		p = 0
+		# print(f"CARTITEMS has length : {len(cartitems)} ", cartitems)
+		# print(f"QUANTITY has length : {len(quantity)} ", quantity)
+		for cartitem in cartitems:
+			# print("HELLO")
+			q = int(quantity[p])
+			if q > 0:
+				cartitem.book_quantity = q
+				cartitem.save()
+			else:
+				cartitem.delete()
+			p += 1
+
+	messages.success(request, "Cart Updated")
+	
+	if user.is_vendor:
+		next = reverse('cart-vendor')
+	else:
+		next = reverse('cart-customer')
+
+	return HttpResponseRedirect(next)
+
 
 
 @login_required
