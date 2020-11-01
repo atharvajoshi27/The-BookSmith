@@ -242,7 +242,7 @@ article:after,
   background-color: #fa3434; }
 
 .bg-light-orange {
-  background-color: #ffdcb0; }
+  background-color: #e27c00; }
 
 .bg-light-green {
   background-color: #abeae8; }
@@ -253,6 +253,22 @@ article:after,
 .bg-light-red {
   background-color: #fbd5e7; }
 
+.bg-gra-02 {
+  background: -webkit-gradient(linear, left bottom, right top, from(#fc2c77), to(#6c4079));
+  background: -webkit-linear-gradient(bottom left, #fc2c77 0%, #6c4079 100%);
+  background: -moz-linear-gradient(bottom left, #fc2c77 0%, #6c4079 100%);
+  background: -o-linear-gradient(bottom left, #fc2c77 0%, #6c4079 100%);
+  background: linear-gradient(to top right, #fc2c77 0%, #6c4079 100%); }
+
+  .bg-masthead {
+    padding-top: 2rem;
+    padding-bottom: calc(10rem - 4.5rem);
+    background: linear-gradient(to bottom, rgba(92, 77, 66, 0.8) 0%, rgba(92, 77, 66, 0.8) 100%), url("../images/bg-masthead.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
+  }
 .bg-gradient-blue {
   background: rgba(33, 37, 41, 0.4);
   /* For browsers that do not support gradients */
@@ -318,7 +334,16 @@ article:after,
   background-size: cover, auto;
   background-repeat: no-repeat, repeat;
   background-position: 0px 0px, 50% 50%; }
+  
+  .bg-gra-01 {
+    background: -webkit-gradient(linear, left bottom, left top, from(#fbc2eb), to(#a18cd1));
+    background: -webkit-linear-gradient(bottom, #fbc2eb 0%, #a18cd1 100%);
+    background: -moz-linear-gradient(bottom, #fbc2eb 0%, #a18cd1 100%);
+    background: -o-linear-gradient(bottom, #fbc2eb 0%, #a18cd1 100%);
+    background: linear-gradient(to top, #fbc2eb 0%, #a18cd1 100%);
+  }
 
+  
 .bg-img {
   overflow: hidden;
   background-color: #ddd;
@@ -345,7 +370,7 @@ article:after,
     /* For Opera 11.1 to 12.0 */
     /* For Firefox 3.6 to 15 */
     background: -webkit-gradient(linear, left top, right bottom, from(#ff6a00), to(#12225b));
-    background: linear-gradient(to bottom right, #ff6a00, #12225b);
+    background: linear-gradient(to bottom right, #fc2c77, #12225b);
     /* Standard syntax */ }
   .overlay-gradient:hover:before {
     opacity: .9; }

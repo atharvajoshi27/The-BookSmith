@@ -1,143 +1,198 @@
-{% extends 'Store/layout.html' %}
+{% load static %}
 {% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}
-Add Book
-{% endblock %}
+<head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Colorlib Templates">
+    <meta name="author" content="Colorlib">
+    <meta name="keywords" content="Colorlib Templates">
 
-{% block body %}
-<div class="container">
-	<div class="row row-content">
-            {% if message %}
-                <div>{{ message }}</div>
-            {% endif %}
-			{% if messages %}
-				{% for message in messages %}
-					<div class="alert alert-{{ message.tags }} mt-3">
-					<p class="icontext"><i class="icon text-{{ message.tags }}"></i>{{ message }}</p>
-					</div>
-				{% endfor %}
-			{% endif %}
+    <!-- Title Page-->
+    <title>The BookSmith - Add Book Form</title>
+
+    <!-- Icons font CSS-->
+    <link href="{% static 'Store/vendor/mdi-font/css/material-design-iconic-font.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'Store/vendor/font-awesome-4.7/css/font-awesome.min.css' %}" rel="stylesheet" media="all">
+    <!-- Font special for pages-->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i' %}" rel="stylesheet">
+
+    <!-- Vendor CSS-->
+    <link href="{% static 'Store/vendor/select2/select2.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'Store/vendor/datepicker/daterangepicker.css' %}" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="{% static 'Store/css/main.css' %}" rel="stylesheet" media="all">
+</head>
+
+<body>
+    <div class="page-wrapper bg-gra-01 p-t-130 p-b-100 font-poppins">
+        <div class="wrapper wrapper--w680">
+            <div class="card card-4">
+                <div class="card-body">
+                    <h2 class="title">Add Book Information</h2>
+                    <form action="{% url 'addbook' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label for="book_name">Book Name</label>
+                                    {% render_field form.book_name class+="input--style-4" name="book_name" autocomplete="off" id="book_name" %}
+                                    {% if form.book_name.errors %}
+                                        {% for error in form.book_name.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label for="book_author">Author</label>
+                                    {% render_field form.book_author class+="input--style-4" name="book_author" autocomplete="off" id="book_author" %}
+                                    {% if form.book_author.errors %}
+                                        {% for error in form.book_author.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label for="book_price">Price</label>
+                                    {% render_field form.book_price class+="input--style-4" name="book_price" autocomplete="off" id="book_price" %}
+                                    {% if form.book_price.errors %}
+                                        {% for error in form.book_price.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label for="book_edition">Edition</label>
+                                    {% render_field form.book_edition class+="input--style-4" name="book_edition" autocomplete="off" id="book_edition" %}
+                                    {% if form.book_edition.errors %}
+                                        {% for error in form.book_edition.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label for="book_quantity">Quantity</label>
+                                    {% render_field form.book_quantity class+="input--style-4" name="book_quantity" autocomplete="off" id="book_quantity" %}
+                                    {% if form.book_quantity.errors %}
+                                        {% for error in form.book_quantity.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label for="category">Category</label>
+                                    <select class="input--style-4" id="category" name="category">
+                                        <option>Select</option>
+                                        <option>Action and Adventure</option>
+                                        <option>Anthology</option>
+                                        <option>Biography/Autobiography</option>
+                                        <option>Biology</option>
+                                        <option>Chemistry</option>
+                                        <option>Classic</option>
+                                        <option>Comic and Graphic Novel</option>
+                                        <option>Crime and Detective</option>
+                                        <option>Drama</option>
+                                        <option>Engineering</option>
+                                        <option>Essay</option>
+                                        <option>Fable</option>
+                                        <option>Fairy Tale</option>
+                                        <option>Fan-Fiction</option>
+                                        <option>Fantasy</option>
+                                        <option>Historical Fiction</option>
+                                        <option>Horror</option>
+                                        <option>Humor</option>
+                                        <option>Legend</option>
+                                        <option>Magical Realism</option>
+                                        <option>Mathematics</option>
+                                        <option>Memoir</option>
+                                        <option>Mystery</option>
+                                        <option>Mythology</option>
+                                        <option>Narrative Nonfiction</option>
+                                        <option>Periodicals</option>
+                                        <option>Physics</option>
+                                        <option>Poetry</option>
+                                        <option>Realistic Fiction</option>
+                                        <option>Reference Books</option>
+                                        <option>Romance</option>
+                                        <option>Satire</option>
+                                        <option>Science Fiction (Sci-Fi)</option>
+                                        <option>Self-help Book</option>
+                                        <option>Short Story</option>
+                                        <option>Speech</option>
+                                        <option>Suspense/Thriller</option>
+                                        <option>Textbook</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div><div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label for="is_new">New?</label>
+                                    {% render_field form.is_new class+="input--style-4" name="is_new" autocomplete="off" id="is_new" %}
+                                    {% if form.is_new.errors %}
+                                        {% for error in form.is_new.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label for="image_file">Upload Image</label>
+                                    {% render_field form.image_file class+="form-control-file" name="image_file" autocomplete="off" id="image_file" %}
+                                    {% if form.image_file.errors %}
+                                        {% for error in form.image_file.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="p-t-15">
+                            <a href="#"><button class="btn btn--radius-2 btn--blue" type="submit">Submit</button></a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
-<form action="{% url 'addbook' %}" method="POST" enctype="multipart/form-data">	
-	{% csrf_token %}
+    <!-- Jquery JS-->
+    <script src="{% static 'Store/vendor/jquery/jquery.min.js' %}"></script>
+    <!-- Vendor JS-->
+    <script src="{% static 'Store/vendor/select2/select2.min.js' %}"></script>
+    <script src="{% static 'Store/vendor/datepicker/moment.min.js' %}"></script>
+    <script src="{% static 'Store/vendor/datepicker/daterangepicker.js' %}"></script>
 
-	<div class="form-group">
-		<label for="book_name">Book Name</label>
-		{% render_field form.book_name class+="form-control" name="book_name" autocomplete="off" id="book_name" %}
-        {% if form.book_name.errors %}
-            {% for error in form.book_name.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        {% endif %}
-		<!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"> -->
-	</div>
-	<div class="form-group">
-		<label for="book_author">Author</label>
-		{% render_field form.book_author class+="form-control" name="book_author" autocomplete="off" id="book_author" %}
-        {% if form.book_author.errors %}
-            {% for error in form.book_author.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        {% endif %}
-		<!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"> -->
-	</div>
-	<div class="form-group">
-		<label for="book_price">Price</label>
-		{% render_field form.book_price class+="form-control" name="book_price" autocomplete="off" id="book_price" %}
-        {% if form.book_price.errors %}
-            {% for error in form.book_price.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        {% endif %}
-		<!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"> -->
-	</div>
-	<div class="form-group">
-		<label for="book_edition">Edition</label>
-		{% render_field form.book_edition class+="form-control" name="book_edition" autocomplete="off" id="book_edition" %}
-        {% if form.book_edition.errors %}
-            {% for error in form.book_edition.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        {% endif %}
-		<!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"> -->
-	</div>
-	<div class="form-group">
-		<label for="book_quantity">Quantity</label>
-		{% render_field form.book_quantity class+="form-control" name="book_quantity" autocomplete="off" id="book_quantity" %}
-        {% if form.book_quantity.errors %}
-            {% for error in form.book_quantity.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        {% endif %}
-		<!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"> -->
-	</div>
-	<div class="form-group">
-		<label for="category">Category</label>
-		<select class="form-control" id="category" name="category">
-			<option>Action and Adventure</option>
-			<option>Anthology</option>
-			<option>Biography-Autobiography</option>
-			<option>Biology</option>
-			<option>Chemistry</option>
-			<option>Classic</option>
-			<option>Comic and Graphic Novel</option>
-			<option>Crime and Detective</option>
-			<option>Drama</option>
-			<option>Engineering</option>
-			<option>Essay</option>
-			<option>Fable</option>
-			<option>Fairy Tale</option>
-			<option>Fan-Fiction</option>
-			<option>Fantasy</option>
-			<option>Historical Fiction</option>
-			<option>Horror</option>
-			<option>Humor</option>
-			<option>Legend</option>
-			<option>Magical Realism</option>
-			<option>Mathematics</option>
-			<option>Memoir</option>
-			<option>Mystery</option>
-			<option>Mythology</option>
-			<option>Narrative Nonfiction</option>
-			<option>Periodicals</option>
-			<option>Physics</option>
-			<option>Poetry</option>
-			<option>Realistic Fiction</option>
-			<option>Reference Books</option>
-			<option>Romance</option>
-			<option>Satire</option>
-			<option>Science Fiction (Sci-Fi)</option>
-			<option>Self-help Book</option>
-			<option>Short Story</option>
-			<option>Speech</option>
-			<option>Suspense-Thriller</option>
-			<option>Textbook</option>
-		</select>
-	</div>
-	
-	<div class="form-group">
-		<label for="is_new">New?</label>
-		{% render_field form.is_new class+="form-control" name="is_new" autocomplete="off" id="is_new" %}
-        {% if form.is_new.errors %}
-            {% for error in form.is_new.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        {% endif %}
-		<!-- <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"> -->
-	</div>
-	<div class="form-group">
-		<label for="image_file">Upload Image</label>
-		{% render_field form.image_file class+="form-control-file" name="image_file" autocomplete="off" id="image_file" %}
-		{% if form.image_file.errors %}
-			{% for error in form.image_file.errors %}
-				<li>{{ error }}</li>
-			{% endfor %}
-		{% endif %}
-    </div>
-    <button type="submit" class="btn btn-primary mb-2">Add Book</button>
-</form>	
+    <!-- Main JS-->
+    <script src="{% static 'Store/js/global.js' %}"></script>
+
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+
+</html>
+<!-- end document-->  </div> <!-- /.8 -->
+    </div> <!-- /.row-->
 </div>
-
-{% endblock %}
+</div>
+</body>
+</html>

@@ -13,7 +13,7 @@ from .forms import CreateUser, AddBook
 # https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html
 
 def index(request):
-	return HttpResponse('<b>INDEX PAGE</b>')
+	return render(request, 'Store/home_page.html')
 
 
 def register(request):
