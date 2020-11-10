@@ -8,20 +8,23 @@ Members :
 This is Database Management System course Project
 
 Tech Stack Used :
+
     HTML/CSS/BOOTSTRAP for frontend
     Sqlite3 for Database
     Django(python framework) for backend
 
 Features :
-    Provides a platform for selling and buying of books
-    Vendors and customer have separate accounts with separate permissions
-    Cart and Payment option
+
+    Provides a platform for selling and buying of books  
+    Vendors and customer have separate accounts with separate permissions    
+    Cart and Payment option    
     Categories Products for easy shopping
 
 Uniquness :
 
 
 Installation Guide :
+
 	pip install virtualenv
 	virtualenv env
 	source env/bin/activate
