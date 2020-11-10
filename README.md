@@ -20,8 +20,6 @@ Features :
     Cart and Payment option    
     Categories Products for easy shopping
 
-Uniquness :
-
 
 Installation Guide :
 
