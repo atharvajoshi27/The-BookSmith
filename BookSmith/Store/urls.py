@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 
-
+# views have been added to redirect to particular urls
 urlpatterns = [
 
 	path('', views.index, name='index'),

@@ -2,7 +2,7 @@ from django.forms import ModelForm, Textarea
 from django import forms
 from .models import User, Book
 
-
+# Using this form we can easily create users
 class CreateUser(ModelForm):
 	class Meta:
 		# print(User.__dict__)
@@ -12,6 +12,7 @@ class CreateUser(ModelForm):
 	# def __init__(self, *args, **kwargs):
 	# 	super(CreateUser, self).__init__(*args, **kwargs)
 
+# similar form to add books
 class AddBook(ModelForm):
 	class Meta:
 		model = Book

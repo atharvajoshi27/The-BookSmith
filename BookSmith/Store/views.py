@@ -12,10 +12,11 @@ from .forms import CreateUser, AddBook
 # references :
 # https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html
 
+# Default View
 def index(request):
 	return render(request, 'Store/home_page.html')
 
-
+# View for registration
 def register(request):
 	if request.method == "POST":
 		# print(request.POST)
@@ -59,7 +60,7 @@ def register(request):
 		}
 		return render(request, 'Store/register.html', context)
 
-
+# View for Login
 def log_in(request):
 	if request.method == "POST":
 		username = request.POST["username"]
@@ -95,12 +96,13 @@ def log_in(request):
 	else:
 		return render(request, "Store/login.html")
 
-
+# login_required will redirect to login if user is not logged in
 @login_required
 def log_out(request):
 	logout(request)
 	return HttpResponseRedirect(reverse('index'))
 
+# default view of logged in customer
 @login_required
 def index_customer(request):
 	# user = request.user
@@ -147,6 +149,7 @@ def index_customer(request):
 	}
 	return render(request, 'Store/categories.html', context)
 
+# default view of vendor
 @login_required
 def index_vendor(request):
 	user = request.user
@@ -160,6 +163,7 @@ def index_vendor(request):
 	}
 	return render(request, 'Store/index_vendor.html', context=context)
 
+# view to let vendor add books
 @login_required
 def addbook(request):
 	user = request.user
@@ -218,6 +222,7 @@ def addbook(request):
 		}
 		return render(request, 'Store/addbook.html', context)
 
+# many such cart_items will make up a cart
 @login_required
 def cart_item(request, book_id):
 	print(f"Book Id: {book_id} : {type(book_id)}")
@@ -274,6 +279,7 @@ def cart_item(request, book_id):
 		}
 		raise Http404('Something Went Wrong.')
 
+# to see items in cart
 @login_required
 def cart_view(request):
 	user = request.user
@@ -306,7 +312,7 @@ def cart_view(request):
 	context["total"] = total
 	return render(request, 'Store/cart.html', context)
 
-
+# to remove items in cart
 @login_required
 def cart_remove(request, cart_item):
 	cart_item = int(cart_item)
@@ -335,6 +341,7 @@ def cart_remove(request, cart_item):
 		# print(x)
 		return redirect(reverse('cart-customer'))
 
+# to let user update cart
 @login_required
 def cart_update(request):
 	user = request.user
@@ -372,7 +379,7 @@ def cart_update(request):
 
 	return HttpResponseRedirect(next)
 
-
+# to see books within one category
 @login_required
 def category_details(request, category):
 	category = Category.objects.filter(category=category).first()
@@ -388,6 +395,7 @@ def category_details(request, category):
 		raise Http404(request, "No Such Category")
 	pass
 
+# make payment for the user cart
 @login_required
 def payment(request):
 
@@ -475,6 +483,7 @@ def payment(request):
 			else:
 				return HttpResponseRedirect(reverse('cart-customer'))
 
+# to see details of a particular book
 def book_details(request, book_id):
 	book_id = int(book_id)
 	book = Book.objects.filter(pk=book_id).first()

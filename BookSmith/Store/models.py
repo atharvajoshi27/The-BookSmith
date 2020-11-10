@@ -8,8 +8,16 @@ from BookSmith.settings import BASE_DIR
 
 # Create your models here.
 
+# NOTE : django doesn't support composite (grouping of keys) primary keys
+# that's why we have added a surrogate key (e.g. book_id which isn't really related)
+# to have functionalities
+# Also, it improves the performance of the overall models
+
+
+# to upload book images
 UPLOAD_TO = "images/"
 
+# validation of contact number in user model
 def validate_contact_number(contact_number):
 	if not (1000000000 <= contact_number <= 9999999999):
 		raise ValidationError('Contact number must ne a 10 digit number')
@@ -28,25 +36,25 @@ class User(AbstractUser):
 	is_vendor = models.BooleanField(choices=vendor_choice)
 	REQUIRED_FIELDS = ['contact_number', 'address', 'is_vendor']
 
-
+# Customer is different from vendor in the apsect that it can't sell books
 class Customer(models.Model):
 	customer_id = models.AutoField(primary_key=True)
 	customer_details = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
-
+# Vendor can sell books + customer functionalities
 class Vendor(models.Model):
 	vendor_id = models.AutoField(primary_key=True)
 	vendor_details = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
-
+# add categories of books
 class Category(models.Model):
 	category_id = models.AutoField(primary_key=True)        
 	category = models.CharField(max_length=25)
 
 
-
+# books to be sold by vendor
 class Book(models.Model):
 	old_new = (
 		(1, 'Yes'),
@@ -84,12 +92,13 @@ class Book(models.Model):
 		print(im.size)
 		quality_val = 100
 		im.save(filename, quality=quality_val)
-		
+
+# Cart is made up of multiple cartitems 
 class Cart(models.Model):
 	cart_id = models.AutoField(primary_key=True)
 	customer_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
-
+# many cartitems make up one cart
 class CartItem(models.Model):
 	cartitem_id = models.AutoField(primary_key=True)
 	# total_price = models.DecimalField(max_digits=6, decimal_place=2)
@@ -98,7 +107,7 @@ class CartItem(models.Model):
 	cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
 
 
-
+# this is very basic model for the payments
 class Payment(models.Model):
 	payment_choices = (
 		('CC', 'Credit Card'),
@@ -110,5 +119,4 @@ class Payment(models.Model):
 	payment_type = models.CharField(max_length=4, choices=payment_choices)
 	amount = models.DecimalField(max_digits=6, decimal_places=2)
 	payment_date = models.DateTimeField(auto_now_add=True)
-	# cart = models.ForeignKey(rCart, on_delete=models.CASCADE)
 	customer_id = models.ForeignKey(User, on_delete=models.CASCADE)
